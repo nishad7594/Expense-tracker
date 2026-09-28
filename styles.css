@@ -1,0 +1,579 @@
+/* =============================================================================
+   PERSONAL EXPENSE TRACKER - Phase 2: Modern CSS Stylesheet
+   =============================================================================
+   LEARNER NOTE - WHAT IS CSS?
+   CSS (Cascading Style Sheets) controls how HTML elements are presented:
+   colors, fonts, spacing, layout grids, and responsive behaviors.
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   1. DESIGN TOKENS (CSS Custom Properties / Variables)
+   -----------------------------------------------------------------------------
+   WHY CSS VARIABLES?
+   Instead of repeating color hex codes like '#3b82f6' in dozens of places, 
+   we define them once inside ':root'. If we ever want to tweak our brand color 
+   or add a light/dark theme, we only change it here in one single place!
+----------------------------------------------------------------------------- */
+:root {
+  /* Color Palette - Modern Dark Slate Theme */
+  --bg-page: #0b0f19;          /* Deepest background for the whole page */
+  --bg-card: #151d30;          /* Slightly lighter surface for sections & cards */
+  --bg-card-hover: #1b253d;    /* Subtle hover effect for interactive cards */
+  --bg-input: #0e1626;         /* Input field background */
+  
+  /* Borders & Dividers */
+  --border-color: #243049;     /* Subtle divider lines */
+  --border-focus: #3b82f6;     /* Accent border when an input is clicked */
+
+  /* Text Colors */
+  --text-primary: #f1f5f9;     /* Bright readable text for titles and values */
+  --text-secondary: #94a3b8;   /* Muted text for labels, subtitles, hints */
+  --text-dim: #64748b;         /* Low-contrast text for footer/disabled items */
+
+  /* Brand Accents */
+  --primary: #3b82f6;          /* Primary button and highlight blue */
+  --primary-hover: #2563eb;    /* Darker blue when hovering over buttons */
+  --success: #10b981;          /* Emerald green for positive values/income */
+  --danger: #ef4444;           /* Rose red for delete buttons and alerts */
+  --danger-bg: rgba(239, 68, 68, 0.12); /* Soft transparent red for delete pill */
+
+  /* Category Badge Colors */
+  --cat-food: #f59e0b;         /* Amber for food */
+  --cat-transport: #06b6d4;    /* Cyan for transit */
+  --cat-housing: #8b5cf6;      /* Purple for housing */
+  --cat-entertainment: #ec4899;/* Pink for entertainment */
+  --cat-health: #10b981;       /* Green for health */
+  --cat-misc: #6b7280;         /* Neutral gray for miscellaneous */
+
+  /* Spacing & Radii System */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+  --transition-fast: 0.15s ease;
+}
+
+/* -----------------------------------------------------------------------------
+   2. GLOBAL RESET & BASE STYLES
+   -----------------------------------------------------------------------------
+   WHY A RESET?
+   Every browser (Chrome, Safari, Edge) has slightly different default margins 
+   and paddings. Setting 'box-sizing: border-box' ensures padding and borders 
+   do NOT make elements wider than the width we specify.
+----------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0 1rem;
+}
+
+/* -----------------------------------------------------------------------------
+   3. HEADER STYLING
+   ----------------------------------------------------------------------------- */
+.app-header {
+  padding: 2.5rem 0 1.5rem 0;
+  text-align: center;
+}
+
+.header-content h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.4rem;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* -----------------------------------------------------------------------------
+   4. LAYOUT CONTAINER
+   ----------------------------------------------------------------------------- */
+.app-container {
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto 3rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; /* Spacing between major sections */
+  flex: 1;   /* Pushes footer down */
+}
+
+/* Card surfaces applied to each major section */
+.summary-section,
+.form-section,
+.table-section {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-card);
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* -----------------------------------------------------------------------------
+   5. SUMMARY SECTION (CSS Grid & Flexbox)
+   -----------------------------------------------------------------------------
+   WHY CSS GRID HERE?
+   'repeat(auto-fit, minmax(220px, 1fr))' creates a responsive 3-column row 
+   that automatically collapses into 1 column on mobile phones without 
+   needing extra media queries!
+----------------------------------------------------------------------------- */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-card {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.summary-card:hover {
+  border-color: #3b507a;
+  transform: translateY(-2px);
+}
+
+.card-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.card-value {
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.total-spend-card .card-value {
+  color: #60a5fa; /* Vibrant blue highlight for spend */
+}
+
+.card-hint {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+/* Category Breakdown Placeholder */
+.category-breakdown-card {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.25rem;
+}
+
+.category-breakdown-card h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.empty-hint {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+/* Dynamic Category Breakdown List (Phase 5) */
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.category-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.category-item-name {
+  font-weight: 500;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.category-item-meta {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.category-item-pct {
+  font-size: 0.775rem;
+  color: var(--text-dim);
+  margin-left: 0.4rem;
+}
+
+/* The background track of the bar */
+.category-bar-track {
+  width: 100%;
+  height: 8px;
+  background-color: var(--bg-input);
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+/* The colored filled portion that animates width */
+.category-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+/* -----------------------------------------------------------------------------
+   6. EXPENSE FORM STYLING
+   ----------------------------------------------------------------------------- */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Form Labels */
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* Inputs & Dropdowns */
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+/* Focus State: highlights active input and boosts accessibility */
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+/* Dropdown option styles */
+.form-group select option {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+/* Submit Button */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn {
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* -----------------------------------------------------------------------------
+   7. EXPENSE TABLE STYLING
+   ----------------------------------------------------------------------------- */
+.table-header-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1rem;
+}
+
+.table-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* Horizontal scroll wrapper for small mobile screens */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.expenses-table {
+  width: 100%;
+  border-collapse: collapse; /* Collapses double table borders into clean single lines */
+  text-align: left;
+}
+
+.expenses-table th {
+  background-color: var(--bg-input);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.85rem 1rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.expenses-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.expenses-table th.sortable:hover {
+  color: var(--primary);
+  background-color: var(--bg-card-hover);
+}
+
+.expenses-table th.sortable:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: -2px;
+}
+
+.expenses-table th.sortable.active {
+  color: #60a5fa;
+}
+
+.sort-icon {
+  display: inline-block;
+  margin-left: 0.35rem;
+  font-size: 0.75rem;
+  opacity: 0.6;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.expenses-table th.sortable.active .sort-icon {
+  opacity: 1;
+  color: #60a5fa;
+}
+
+.expenses-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.925rem;
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+/* Alternating row subtle highlight */
+.expenses-table tbody tr:hover {
+  background-color: var(--bg-card-hover);
+}
+
+/* Alignment utilities */
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.amount-col {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums; /* Keeps numbers neatly aligned vertically */
+  color: #38bdf8;
+}
+
+/* Category Badges (Pills) */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px; /* Pill shape */
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.badge-food {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: var(--cat-food);
+}
+
+.badge-transport {
+  background-color: rgba(6, 182, 212, 0.15);
+  color: var(--cat-transport);
+}
+
+.badge-housing {
+  background-color: rgba(139, 92, 246, 0.15);
+  color: var(--cat-housing);
+}
+
+.badge-entertainment {
+  background-color: rgba(236, 72, 153, 0.15);
+  color: var(--cat-entertainment);
+}
+
+.badge-health {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: var(--cat-health);
+}
+
+.badge-misc {
+  background-color: rgba(107, 114, 128, 0.15);
+  color: var(--cat-misc);
+}
+
+/* Delete Row Action Button */
+.btn-delete {
+  background-color: transparent;
+  color: var(--danger);
+  border: 1px solid transparent;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.btn-delete:hover {
+  background-color: var(--danger-bg);
+  border-color: var(--danger);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 2.5rem 1rem;
+}
+
+.empty-state-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.empty-state-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-dim);
+}
+
+/* -----------------------------------------------------------------------------
+   8. FOOTER
+   ----------------------------------------------------------------------------- */
+.app-footer {
+  text-align: center;
+  padding: 1.5rem 0;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border-color);
+}
+
+/* -----------------------------------------------------------------------------
+   9. RESPONSIVE BREAKPOINTS (Mobile Adaptations)
+   -----------------------------------------------------------------------------
+   WHY MEDIA QUERIES?
+   When the screen is narrower than 768px (typical tablets & mobile phones), 
+   we adjust font sizes, change button widths to full-width, and optimize padding.
+----------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  body {
+    padding: 0 0.75rem;
+  }
+
+  .header-content h1 {
+    font-size: 1.75rem;
+  }
+
+  .summary-section,
+  .form-section,
+  .table-section {
+    padding: 1.25rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr; /* Stack inputs into a single column on phones */
+  }
+
+  .form-actions {
+    justify-content: stretch;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

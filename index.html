@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<!-- 
+  =============================================================================
+  PERSONAL EXPENSE TRACKER - Phase 1: Semantic HTML Skeleton
+  =============================================================================
+  WHY THIS STRUCTURE MATTERS:
+  HTML gives content meaning (semantics). Instead of using generic <div> tags 
+  everywhere, we use landmark tags like <header>, <main>, <section>, and <table>. 
+  This makes our site accessible to screen readers, easy to navigate via keyboard, 
+  and much easier to style with CSS in Phase 2.
+-->
+<html lang="en">
+
+<head>
+  <!-- Character encoding ensures special characters and currency symbols display properly -->
+  <meta charset="UTF-8">
+
+  <!-- The viewport meta tag is essential for responsive design. 
+       It tells mobile devices not to zoom out and simulate a desktop, but to render 
+       at the actual width of the device screen. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Personal Expense Tracker</title>
+
+  <!-- Google Fonts: Inter font family for modern, clean typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Link to our stylesheet (we will write styles.css in Phase 2) -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- =========================================================================
+       PAGE HEADER
+       Contains the main identity and purpose of the website.
+       ========================================================================= -->
+  <header class="app-header">
+    <div class="header-content">
+      <h1>Personal Expense Tracker</h1>
+      <p class="subtitle">Track your spending, manage your budget, and build smart financial habits.</p>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MAIN CONTENT CONTAINER
+       Contains the primary functional sections of the app:
+       1. Summary & Category Breakdown
+       2. Expense Entry Form
+       3. Transaction History Table
+       ========================================================================= -->
+  <main class="app-container">
+
+    <!-- -----------------------------------------------------------------------
+         SECTION 1: FINANCIAL SUMMARY
+         Gives users a high-level snapshot of their spending.
+         ----------------------------------------------------------------------- -->
+    <section class="summary-section" aria-labelledby="summary-heading">
+      <h2 id="summary-heading" class="section-title">Summary & Overview</h2>
+
+      <!-- Summary metric cards (will be calculated dynamically with JS in Phase 5) -->
+      <div class="summary-cards">
+        <article class="summary-card total-spend-card">
+          <span class="card-label">Total Spent</span>
+          <span class="card-value" id="total-spend-display">$0.00</span>
+          <span class="card-hint">All recorded expenses</span>
+        </article>
+
+        <article class="summary-card transaction-count-card">
+          <span class="card-label">Total Transactions</span>
+          <span class="card-value" id="total-count-display">0</span>
+          <span class="card-hint">Logged items</span>
+        </article>
+
+        <article class="summary-card top-category-card">
+          <span class="card-label">Top Spending Category</span>
+          <span class="card-value" id="top-category-display">—</span>
+          <span class="card-hint">Largest expense share</span>
+        </article>
+      </div>
+
+      <!-- Category Breakdown container (will display progress bars/breakdown in Phase 5) -->
+      <div class="category-breakdown-card">
+        <h3>Spending by Category</h3>
+        <div id="category-breakdown-list" class="category-list">
+          <p class="empty-hint">Add expenses below to see your spending breakdown by category.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         SECTION 2: ADD EXPENSE FORM
+         Allows users to input transaction details.
+         Why use a <form>?
+         A <form> handles keyboard submission (pressing Enter) and triggers standard 
+         submit events that we will capture with JavaScript in Phase 3.
+         ----------------------------------------------------------------------- -->
+    <section class="form-section" aria-labelledby="form-heading">
+      <h2 id="form-heading" class="section-title">Add New Expense</h2>
+
+      <form id="expense-form" class="expense-form">
+        <div class="form-grid">
+
+          <!-- Date Input -->
+          <div class="form-group">
+            <!-- The 'for' attribute links this label to the input with id="expense-date".
+                 Clicking this label will automatically focus the input field! -->
+            <label for="expense-date">Date</label>
+            <input type="date" id="expense-date" name="date" required>
+          </div>
+
+          <!-- Description Input -->
+          <div class="form-group">
+            <label for="expense-description">Description</label>
+            <input type="text" id="expense-description" name="description"
+              placeholder="e.g. Weekly Groceries, Electric Bill" maxlength="60" required>
+          </div>
+
+          <!-- Category Select Dropdown -->
+          <div class="form-group">
+            <label for="expense-category">Category</label>
+            <select id="expense-category" name="category" required>
+              <option value="" disabled selected>Select a category...</option>
+              <option value="Food & Dining">Food &amp; Dining</option>
+              <option value="Transportation">Transportation</option>
+              <option value="Housing & Utilities">Housing &amp; Utilities</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Miscellaneous">Miscellaneous</option>
+              <option value="Health & Wellness">Health &amp; Wellness</option>
+              <option value="Health & Wellness">Health &amp; Wellness</option>
+
+
+            </select>
+          </div>
+
+          <!-- Amount Input -->
+          <div class="form-group">
+            <label for="expense-amount">Amount ($)</label>
+            <!-- step="0.01" allows cents/decimals; min="0.01" prevents zero or negative values -->
+            <input type="number" id="expense-amount" name="amount" step="0.01" min="0.01" placeholder="0.00" required>
+          </div>
+
+        </div>
+
+        <!-- Submit Button: inside a form, button type="submit" triggers the submit event -->
+        <div class="form-actions">
+          <button type="submit" id="add-expense-btn" class="btn btn-primary">
+            + Add Expense
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         SECTION 3: EXPENSE TABLE LIST
+         Displays tabular transaction records.
+         Why use a <table>?
+         Tables are the semantically correct structure for multi-column relational data.
+         In Phase 6, clicking headers will allow sorting by date and amount.
+         ----------------------------------------------------------------------- -->
+    <section class="table-section" aria-labelledby="table-heading">
+      <div class="table-header-wrap">
+        <h2 id="table-heading" class="section-title">Expense History</h2>
+        <span id="sort-indicator" class="table-subtitle">Sorted by Date (Newest first)</span>
+      </div>
+
+      <div class="table-responsive">
+        <table id="expenses-table" class="expenses-table">
+          <thead>
+            <tr>
+              <!-- 'scope="col"' clarifies to screen readers that this header applies to the whole column -->
+              <!-- 'aria-sort' and role="button" ensure full keyboard and screen-reader accessibility -->
+              <th scope="col" id="col-date" class="sortable active" tabindex="0" role="button" aria-sort="descending" title="Click to sort by date">
+                Date <span class="sort-icon" id="date-sort-icon">▼</span>
+              </th>
+              <th scope="col" id="col-description">Description</th>
+              <th scope="col" id="col-category">Category</th>
+              <th scope="col" id="col-amount" class="sortable text-right" tabindex="0" role="button" aria-sort="none" title="Click to sort by amount">
+                Amount <span class="sort-icon" id="amount-sort-icon">⇅</span>
+              </th>
+              <th scope="col" id="col-actions" class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody id="expenses-table-body">
+            <!-- 
+              DEMO STATIC ROWS FOR PHASE 1:
+              These dummy rows let us inspect how the table looks in the browser 
+              before we replace them with dynamic JavaScript rendering in Phase 3.
+            -->
+            <tr>
+              <td>2026-09-20</td>
+              <td>Organic Groceries</td>
+              <td><span class="badge badge-food">Food &amp; Dining</span></td>
+              <td class="text-right amount-col">$42.50</td>
+              <td class="text-center">
+                <button type="button" class="btn-delete" title="Delete expense"
+                  aria-label="Delete Organic Groceries">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2026-09-19</td>
+              <td>Subway Metro Pass</td>
+              <td><span class="badge badge-transport">Transportation</span></td>
+              <td class="text-right amount-col">$15.00</td>
+              <td class="text-center">
+                <button type="button" class="btn-delete" title="Delete expense"
+                  aria-label="Delete Subway Metro Pass">✕</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty state container: will be displayed when there are no transactions -->
+      <div id="empty-state" class="empty-state" style="display: none;">
+        <p class="empty-state-title">No expenses recorded yet</p>
+        <p class="empty-state-subtitle">Use the form above to add your first expense!</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       FOOTER
+       ========================================================================= -->
+  <footer class="app-footer">
+    <p>Personal Expense Tracker &bull; Built with Vanilla HTML, CSS &amp; JavaScript</p>
+  </footer>
+
+  <!-- 
+    Script tag linking our JavaScript file (built in Phase 3).
+    The 'defer' attribute tells the browser to parse all HTML first before 
+    running the script, ensuring all elements exist when JS runs.
+  -->
+  <script src="app.js" defer></script>
+</body>
+
+</html>
