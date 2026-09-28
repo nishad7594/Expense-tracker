@@ -40,7 +40,7 @@
   <header class="app-header">
     <div class="header-content">
       <h1>Personal Expense Tracker</h1>
-      <p class="subtitle">Track your spending, manage your budget, and build smart financial habits.</p>
+      <p class="subtitle">Track your spending, manage your budget, and build your smart financial habits.</p>
     </div>
   </header>
 
@@ -129,7 +129,6 @@
               <option value="Entertainment">Entertainment</option>
               <option value="Miscellaneous">Miscellaneous</option>
               <option value="Health & Wellness">Health &amp; Wellness</option>
-              <option value="Health & Wellness">Health &amp; Wellness</option>
 
 
             </select>
@@ -163,7 +162,7 @@
     <section class="table-section" aria-labelledby="table-heading">
       <div class="table-header-wrap">
         <h2 id="table-heading" class="section-title">Expense History</h2>
-        <span id="sort-indicator" class="table-subtitle">Sorted by Date (Newest first)</span>
+        <span class="table-subtitle">Sorted by newest first</span>
       </div>
 
       <div class="table-responsive">
@@ -171,15 +170,10 @@
           <thead>
             <tr>
               <!-- 'scope="col"' clarifies to screen readers that this header applies to the whole column -->
-              <!-- 'aria-sort' and role="button" ensure full keyboard and screen-reader accessibility -->
-              <th scope="col" id="col-date" class="sortable active" tabindex="0" role="button" aria-sort="descending" title="Click to sort by date">
-                Date <span class="sort-icon" id="date-sort-icon">▼</span>
-              </th>
+              <th scope="col" id="col-date" class="sortable">Date</th>
               <th scope="col" id="col-description">Description</th>
               <th scope="col" id="col-category">Category</th>
-              <th scope="col" id="col-amount" class="sortable text-right" tabindex="0" role="button" aria-sort="none" title="Click to sort by amount">
-                Amount <span class="sort-icon" id="amount-sort-icon">⇅</span>
-              </th>
+              <th scope="col" id="col-amount" class="sortable text-right">Amount</th>
               <th scope="col" id="col-actions" class="text-center">Action</th>
             </tr>
           </thead>
